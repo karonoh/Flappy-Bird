@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Player Movement with Obstacles</title>
+<html>
+<head>
+ <title>Flappy Bird</title>
+   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+ <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet'>
+ </head>
+ <body>
+<canvas id="myCanvas" width=320 height=480
+ style="background:url('http://s2js.com/img/etc/flappyback.png');  background-size: 100%; height: 95% " >
+<script src="script.js"></script>
+</body>
+</html>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #f3f3f3;
+        margin: 0;
+    }
+    #container {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+    }
+    #player {
+        width: 50px;
+        height: 50px;
+        background-color: blue;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .obstacle {
+        width: 200px;
+        height: 200px;
+        background-color: gray;
+        position: absolute;
+        bottom: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
+</head>
+<body>
+<h1>Player Movement with Obstacles</h1>
+<div id="container">
+    <div id="player"></div>
+</div>
+
+<script>
+    const player = document.getElementById("player");
+    const container = document.getElementById("container");
+    const obstacles = [
+        { question: "What is 2 + 2?", answer: "4" },
+        { question: "What is 3 * 3?", answer: "9" },
+        { question: "What is 10 - 5?", answer: "5" },
+        { question: "What is 20 / 5?", answer: "4" },
+        { question: "What is the capital of France?", answer: "Paris" },
+        { question: "What is the largest planet in our solar system?", answer: "Jupiter" },
+        { question: "Who wrote 'Romeo and Juliet'?", answer: "William Shakespeare" },
+        { question: "What is the chemical symbol for water?", answer: "H2O" },
+        { question: "What is the powerhouse of the cell?", answer: "Mitochondria" },
+        { question: "What is the boiling point of water in Celsius?", answer: "100" }
+    ];
+    let currentObstacle = 0;
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'ArrowLeft') {
+            movePlayer(-10);
+        } else if (event.key === 'ArrowRight') {
+            movePlayer(10);
+        }
+    });
+
+    function movePlayer(delta) {
+        const playerPosition = parseFloat(player.style.left) || 0;
+        const newPlayerPosition = playerPosition + delta;
+        const maxX = container.clientWidth - player.offsetWidth;
+
+        // Check if player completes an obstacle
+        if (newPlayerPosition >= container.clientWidth * (currentObstacle + 1)) {
+            if (currentObstacle < obstacles.length - 1) {
+                const answer = prompt(obstacles[currentObstacle].question);
+                if (answer !== null && answer.trim().toLowerCase() === obstacles[currentObstacle].answer.toLowerCase()) {
+                    currentObstacle++;
+                } else {
+                    return; // Incorrect answer, prevent movement
+                }
+            } else {
+                alert("Congratulations! You completed all obstacles!");
+                return; // Game completed, prevent movement
+            }
+        }
+
+        player.style.left = Math.max(0, Math.min(newPlayerPosition, maxX)) + 'px';
+    }
+</script>
+</body>
+</html>
